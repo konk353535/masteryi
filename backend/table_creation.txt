@@ -1,0 +1,26 @@
+CREATE TABLE scans
+(
+  start_id integer,
+  end_id integer,
+  current_id integer,
+  region text,
+  run_number integer,
+  PRIMARY KEY(run_number, region)
+);
+
+CREATE TABLE mastery
+(
+  points integer,
+  champion_id integer,
+  user_id numeric,
+  PRIMARY KEY(champion_id, user_id)
+);
+
+CREATE TABLE users
+(
+  id SERIAL,
+  name text,
+  region text,
+  summoner_id numeric,
+  PRIMARY KEY(region, summoner_id)
+);
