@@ -3,3 +3,5 @@ frontend/bower_components/
 frontend/bower_compoents/
 backend/node_modules/
 backend/config.js
+frontend/tmp
+frontend/dist
