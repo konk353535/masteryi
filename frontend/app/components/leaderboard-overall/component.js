@@ -9,15 +9,7 @@ export default Ember.Component.extend({
     Ember.$.ajax({
       url: '/api/summary',
     }).then((response) => {
-      var champions = response.rows.map((champion) => {
-        if (champion.champion_id === 19) {
-          champion.isOpen = true;
-        } else {
-          champion.isOpen = false;          
-        }
-        return champion;
-      })
-      this.set('champions', champions);
+      this.set('champions', response.rows);
     });
 
   },
