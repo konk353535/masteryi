@@ -3,16 +3,13 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
-  init() {
-    this._super();
-
+  initLeaderboard: Ember.on('init', function () {
     Ember.$.ajax({
       url: '/api/summary',
     }).then((response) => {
       this.set('champions', response.rows);
     });
-
-  },
+  }),
 
   champions: null,
 
@@ -30,25 +27,35 @@ export default Ember.Component.extend({
     });
   }),
 
-  sortProp: ['points:desc'],
+  sortedByProperty: 'points',
 
-  championsSorted: Ember.computed.sort('computedChampions', 'sortProp'),
+  sortedBy: 'desc',
+
+  computedSort: Ember.computed('sortedBy', 'sortedByProperty', function () {
+    const sortedByProperty = this.get('sortedByProperty');
+    const sortedBy = this.get('sortedBy');
+
+    return [`${sortedByProperty}:${sortedBy}`];
+  }),
+
+  championsSorted: Ember.computed.sort('computedChampions', 'computedSort'),
 
   actions: {
     orderBy(column) {
-      const currentCol = this.get('sortProp');
-      const type = currentCol[0].split(':')[0];
-      const order = currentCol[0].split(':')[1];
+      const sortedByProperty = this.get('sortedByProperty');
+      const sortedBy = this.get('sortedBy');
 
-      if (column === type){
-        if (order === 'desc'){
-          this.set('sortProp', [column + ':asc']);
+      if (sortedByProperty === column) {
+        if (sortedBy === 'desc') {
+          this.set('sortedBy', 'asc');
         } else {
-          this.set('sortProp', [column + ':desc']);
+          this.set('sortedBy', 'desc');
         }
       } else {
-        this.set('sortProp', [column + ':desc']);        
+        this.set('sortedBy', 'desc');
       }
+
+      this.set('sortedByProperty', column);
     }
   }
 
