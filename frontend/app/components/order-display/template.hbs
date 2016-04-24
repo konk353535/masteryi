@@ -1,0 +1,10 @@
+{{#if isActive}}
+  {{#if desc}}
+    <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+  {{else}}
+    <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+  {{/if}}
+{{else}}
+  <!-- Stop bouncing around of table columns -->
+  <span class="glyphicon glyphicon-chevron-up" style="visibility: hidden" aria-hidden="true"></span>
+{{/if}}
