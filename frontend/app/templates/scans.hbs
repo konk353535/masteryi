@@ -1,0 +1,42 @@
+<div class="container content-container">
+  <h1>Scans</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Region</th>
+        <th>
+          Players Found 
+          ( <span
+            data-toggle="tooltip" 
+            data-placement="top"
+            title="Players who have atleast mastery level 5 with one champion"
+            style="text-decoration: underline">?</span>
+          )
+        </th>
+        <th>Progress</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each sortedComputedScans as |scan|}}
+      <tr>
+        <td>{{scan.region}}</td>
+        <td>{{format-number number=scan.players}}</td>
+        <td>
+          {{format-number number=scan.current_id}} 
+          / 
+          {{format-number number=scan.end_id}} 
+          ({{scan.progressPercent}}%)
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <!--
+  RegionName StartID CurrentID EndID Progress Bar, Total Found
+  OCE
+  NA
+  EUNE
+  EUW
+
+  -->
+</div>

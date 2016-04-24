@@ -8,7 +8,9 @@ client.connect();
 
 module.exports = function (app) {
   app.get('/api/scans', (req, res) => {
-    client.query('SELECT * FROM scans', (err, result) => {
+    client.query('SELECT t.players, scans.* FROM ' +
+      'scans, (SELECT count(id) as players, region FROM users GROUP BY region) t ' +
+      'WHERE scans.region = t.region', (err, result) => {
       if (err) return res.status(500).send('Sorry another problem :(');
       res.send(result.rows);
     });

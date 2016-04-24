@@ -7,12 +7,6 @@ const client = new pg.Client(config.database);
 client.connect();
 
 module.exports = function (app) {
-  app.get('/api/totals', (req, res) => {
-    client.query('SELECT count(id), region FROM users GROUP BY region', (err, result) => {
-      if (err) return res.status(500).send('Sorry another problem :(');
-      res.send(result.rows);
-    });
-  });
 
   app.get('/api/summary', (req, res) => {
     const queryText = 'SELECT * FROM mastery, users WHERE mastery.points IN ' +
