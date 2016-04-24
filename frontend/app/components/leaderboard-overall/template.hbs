@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="table-container">
+    <table class="table table-striped">
+      <thead>
+        <tr class="table-header">
+          <th {{action 'orderBy' 'championName'}}>Champion</th>
+          <th {{action 'orderBy' 'points'}}>Highest Mastery</th>
+          <th {{action 'orderBy' 'name'}}>Name</th>
+          <th {{action 'orderBy' 'region'}}>Region</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each championsSorted as |champion|}}
+        <tr>
+          <td>
+            <img 
+              class="champion-icon"
+              src={{champion.image}}> 
+            {{champion.championName}}
+          </td>
+          <td>{{champion.points}}</td>
+          <td>{{champion.name}}</td>
+          <td>{{champion.region}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
