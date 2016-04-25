@@ -3,10 +3,16 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
+  limit: null,
+
   initLeaderboard: Ember.on('init', function () {
-    Ember.$.ajax({
-      url: '/api/summary',
-    }).then((response) => {
+    let url = '/api/summary';
+
+    if (this.get('limit')) {
+      url += `?limit=${this.get('limit')}`;
+    }
+
+    Ember.$.ajax({ url }).then((response) => {
       this.set('champions', response.rows);
     });
   }),

@@ -1,0 +1,31 @@
+<div class="summary-leaderboard-container">
+  <h1 class="leaderboard-header">How do you compare?</h1>
+  <div class="content-container">
+    {{leaderboard-overall limit=3}}
+  </div>
+</div>
+<div class="search-container">
+  <div class="input-group input-group-lg">
+    <input type="text" class="form-control" placeholder="xX3niperProXx">
+    <div class="input-group-btn">
+      <button
+        type="button" 
+        class="btn btn-default dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        style="border-radius: 0px;">
+        {{region}} <span class="caret"></span>
+      </button> 
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li {{action 'setRegion' 'NA'}}><a href="#">NA</a></li>
+        <li {{action 'setRegion' 'OCE'}}><a href="#">OCE</a></li>
+        <li {{action 'setRegion' 'EUW'}}><a href="#">EUW</a></li>
+        <li {{action 'setRegion' 'EUNE'}}><a href="#">EUNE</a></li>
+      </ul>
+      <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div><!-- /input-group -->
+</div><!-- /.col-lg-6 -->
