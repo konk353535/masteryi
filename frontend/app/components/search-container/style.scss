@@ -1,0 +1,68 @@
+$primary-color: #f7f7f7;
+$secondary-color: #C9554F;
+$tertiary-color: #C9A04F;
+
+.champion-row {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin: 10px;
+  padding: 10px;
+  background-color: #3D5587;
+  border: 1px solid #f8f8f8;
+  color: #f7f7f7;
+}
+
+.icon-column {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.champion-name-text {
+  margin-top: 5px;
+  color: #f7f7f7;
+}
+
+.my-score-column {
+  display: flex;
+  flex-direction: column;
+  align: center;
+  text-align: center;
+  flex: 1 1;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.my-score-divider {
+  width: 100%;
+  height: 0px;
+  border-top: 1px solid #f8f8f8;
+}
+
+.my-score-text {
+  color: #C9554F;
+}
+
+.champion-rank-column {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  margin-right: 10px;
+  flex: 2 2;
+  align-items: center;
+}
+
+.rank-row {
+  font-size: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.rank-special-text {
+  color: #C9A04F;
+}
+
+.score-special-text {
+  color: #C9554F;
+}

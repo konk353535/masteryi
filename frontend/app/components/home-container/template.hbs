@@ -6,7 +6,7 @@
 </div>
 <div class="search-container">
   <div class="input-group input-group-lg">
-    <input type="text" class="form-control" placeholder="xX3niperProXx">
+    {{input value=name placeholder="xX3niperProXx" class="form-control"}}
     <div class="input-group-btn">
       <button
         type="button" 
@@ -24,7 +24,9 @@
         <li {{action 'setRegion' 'EUNE'}}><a href="#">EUNE</a></li>
       </ul>
       <button type="button" class="btn btn-default">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        <a href="/search?name={{name}}&region={{region}}">
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        </a>
       </button>
     </div>
   </div><!-- /input-group -->
