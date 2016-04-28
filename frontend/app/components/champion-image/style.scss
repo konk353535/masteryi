@@ -1,0 +1,13 @@
+.small {
+  width: 20px;
+  height: 20px;
+}
+
+.large {
+  width: 80px;
+  height: 80px;
+}
+
+& {
+  display: inline-block;
+}

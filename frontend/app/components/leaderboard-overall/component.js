@@ -28,7 +28,6 @@ export default Ember.Component.extend({
       const imageName = championConstants[champion.champion_id].image.full;
 
       champion.championName = championConstants[champion.champion_id].name;
-      champion.image = `http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/${imageName}`;
       return champion;
     });
   }),

@@ -23,7 +23,7 @@
     {{#each championsSorted as |champion|}}
     <tr>
       <td>
-        <img class="champion-icon" src={{champion.image}}> 
+        {{champion-image championId=champion.champion_id size='small'}}
         {{champion.championName}}
       </td>
       <td>{{format-number number=champion.points}}</td>

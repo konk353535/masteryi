@@ -9,7 +9,7 @@ Router.map(function() {
   this.route('leaderboard');
   this.route('scans');
   this.route('home', { path: '/' });
-  this.route('search', { path: '/search/:name' });
+  this.route('search', { path: '/search' });
 });
 
 export default Router;
