@@ -2,7 +2,7 @@
 const env = process.argv[2] || 'prod';
 const config = require('./config')(env);
 const async = require('async');
-const request = require('request');
+const request = require('requestretry');
 // Utilities
 const _ = require('lodash');
 const logger = require('bunyan').createLogger({ name: 'worker' });
@@ -16,7 +16,7 @@ client.connect();
 const checkUser = function (userID, region, next) {
   const fetchUserUrl = `https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/${userID}?api_key=${config.key}`;
 
-  request(fetchUserUrl, { timeout: 2500 }, (err, response, body) => {
+  request({ url: fetchUserUrl, retryDelay: 10000, timeout: 2500 }, (err, response, body) => {
     if (response && response.statusCode === 404) return next();
     if (response && response.statusCode === 429) return setTimeout(() => checkUser(userID, region, next), 10000);
 
@@ -42,7 +42,7 @@ const scanUser = function (userRaw, region, callback) {
 
   const fetchMasteryUrl = `https://${region}.api.pvp.net/championmastery/location/${platformID}/player/${user.id}/champions?api_key=${config.key}`;
 
-  request(fetchMasteryUrl, { timeout: 2500 }, (err, response, body) => {
+  request({ url: fetchMasteryUrl, retryDelay: 10000, timeout: 2500 }, (err, response, body) => {
     if (response && response.statusCode === 404) return callback();
     if (response && response.statusCode === 429) return setTimeout(() => scanUser(userRaw, region, callback), 10000);
 
@@ -52,7 +52,7 @@ const scanUser = function (userRaw, region, callback) {
     } 
 
     // Array of users champion mastery
-    const champions = JSON.parse(body)
+    var champions = JSON.parse(body)
     // Only want level 5's
     champions = champions.filter((champion) => champion.championLevel === 5)
 
