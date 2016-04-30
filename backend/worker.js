@@ -12,11 +12,19 @@ const pg = require('pg');
 const client = new pg.Client(config.database);
 client.connect();
 
+const logTime = function (time, name) {
+  client.query('INSERT into scan_details VALUES($1, $2)', [time, name], function (err, res) {
+    if (err || !res) logger.error(`Unexpected error: ${err}`)
+  });
+}
+
 // Check if a user exists
-const checkUser = function (userID, region, next) {
+const checkUser = function (userID, region, startTime, next) {
   const fetchUserUrl = `https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/${userID}?api_key=${config.key}`;
 
   request({ url: fetchUserUrl, retryDelay: 10000, timeout: 2500 }, (err, response, body) => {
+    logTime((new Date().getTime() / 1000) - startTime, 'CheckUser');
+    startTime = new Date().getTime() / 1000;
     if (response && response.statusCode === 404) return next();
     if (response && response.statusCode === 429) return setTimeout(() => checkUser(userID, region, next), 10000);
 
@@ -26,12 +34,12 @@ const checkUser = function (userID, region, next) {
     }
 
     logger.info(`Found User ${body}`);
-    scanUser(JSON.parse(body), region, next);
+    scanUser(JSON.parse(body), region, startTime, next);
   });
 };
 
 // Scan user for champion mastery, if found load into database
-const scanUser = function (userRaw, region, callback) {
+const scanUser = function (userRaw, region, startTime, callback) {
   const platformID = util.getPlatformID(region);
 
   for (const key in userRaw) {
@@ -43,6 +51,9 @@ const scanUser = function (userRaw, region, callback) {
   const fetchMasteryUrl = `https://${region}.api.pvp.net/championmastery/location/${platformID}/player/${user.id}/champions?api_key=${config.key}`;
 
   request({ url: fetchMasteryUrl, retryDelay: 10000, timeout: 2500 }, (err, response, body) => {
+    logTime((new Date().getTime() / 1000) - startTime, 'scanUser');
+    startTime = new Date().getTime() / 1000;
+
     if (response && response.statusCode === 404) return callback();
     if (response && response.statusCode === 429) return setTimeout(() => scanUser(userRaw, region, callback), 10000);
 
@@ -58,12 +69,12 @@ const scanUser = function (userRaw, region, callback) {
 
     if (champions.length === 0) return callback();
 
-    uploadUser(user, champions, region, callback)
+    uploadUser(user, champions, region, startTime, callback)
   });
 }
 
 // Upsert our user and mastery info
-const uploadUser = function (user, champions, region, outerCallback) {
+const uploadUser = function (user, champions, region, startTime, outerCallback) {
 
   async.waterfall([
     // Check for existing user
@@ -121,7 +132,10 @@ const uploadUser = function (user, champions, region, outerCallback) {
     }
   ], function (err, res) {
     if (err) logger.error(err);
-    outerCallback (null, res)
+    outerCallback (null, res);
+    logTime((new Date().getTime() / 1000) - startTime, 'UploadUser');
+    startTime = new Date().getTime() / 1000;
+
   });
 }
 
@@ -136,8 +150,9 @@ const startWorker = function (startID, endID, region, runNumber) {
   const concurrency = config.workerConcurrency;
 
   async.eachLimit(scanArr, concurrency, (item, next) => {
+    var startTime = new Date().getTime() / 1000;
     updateWorkerStatus(item, region, runNumber);
-    checkUser(item, region, next);
+    checkUser(item, region, startTime, next);
   }, (err, res) => {
     if (err) logger.info(`Error: ${err}`);
     logger.info(`Success: ${res}`);

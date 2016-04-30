@@ -24,3 +24,18 @@ CREATE TABLE users
   summoner_id numeric,
   PRIMARY KEY(region, summoner_id)
 );
+
+CREATE TABLE scan_details
+(
+  time numeric,
+  name text
+);
+
+CREATE INDEX points_idx ON mastery (points);
+CREATE INDEX champion_id_idx ON mastery (champion_id);
+CREATE INDEX user_id_idx ON mastery (user_id);
+
+CREATE INDEX region_idx ON users (region);
+CREATE INDEX summoner_id_idx ON users (summoner_id);
+CREATE INDEX name_idx ON users (name);
+CREATE INDEX summoner_id_region_idx ON users (summoner_id, region);
