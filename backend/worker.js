@@ -63,12 +63,12 @@ const bulkScanUsers = function (users, region, callback) {
     const fetchMasteryUrl = `https://${region}.api.pvp.net/championmastery/location/${platformID}/player/${user.id}/champions?api_key=${config.key}`;
 
     request({ url: fetchMasteryUrl, retryDelay: 10000, timeout: 2500 }, (err, response, body) => {
-      if (response && response.statusCode === 404) return callback();
+      if (response && response.statusCode === 404) return next();
       if (response && response.statusCode === 429) return setTimeout(() => scanUser(user, next), 10000);
 
       if (!response || err || response.statusCode !== 200) {
         logger.error(`Unexpected error: ${err}`);
-        return callback();
+        return next();
       } 
 
       // Array of users champion mastery
