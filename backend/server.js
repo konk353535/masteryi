@@ -1,5 +1,5 @@
 var env = process.argv[2] || 'prod';
-var config = require('/config')(env);
+var config = require('./config')(env);
 
 var express = require('express');
 var app = express();
