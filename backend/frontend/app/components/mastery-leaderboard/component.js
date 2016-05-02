@@ -7,6 +7,8 @@ export default Ember.Component.extend({
 
   limit: null,
 
+  loading: false,
+
   initLeaderboard: Ember.on('init', function () {
     let url = '/api/summary';
 
@@ -18,6 +20,7 @@ export default Ember.Component.extend({
       url += `?limit=${this.get('limit')}`;
     }
 
+    this.set('loading', true);
     Ember.$.ajax({ url }).then((response) => {
       // Sort by points
       var rankings = response.rows;
@@ -30,6 +33,7 @@ export default Ember.Component.extend({
       })
       // Iterate over and apply rank to json
       this.set('champions', rankings);
+      this.set('loading', false);
     });
   }),
 

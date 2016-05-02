@@ -1,48 +1,52 @@
 <div class="container">
-
-  {{#each championData as |champion|}}
-  <div class="champion-row">
-    <div class="icon-column">
-      {{champion-image championId=champion.champion_id size='large'}}
-      <div class="champion-name-text">{{champion-name championId=champion.champion_id}}</div>
+  {{#if loading}}
+    <div class="loader-container" style="text-align: center">
+      <div class="loader"></div>
+      {{loading-text}}
     </div>
-    <div class="my-score-column">
-      <h1>Score</h1>
-      <div class="my-score-divider"></div>
-      <h1 class="my-score-text">{{format-number number=champion.points}}</h1>
+  {{else}}
+    {{#each championData as |champion|}}
+    <div class="champion-row">
+      <div class="icon-column">
+        {{champion-image championId=champion.champion_id size='large'}}
+        <div class="champion-name-text">{{champion-name championId=champion.champion_id}}</div>
+      </div>
+      <div class="my-score-column">
+        <h1>Score</h1>
+        <div class="my-score-divider"></div>
+        <h1 class="my-score-text">{{format-number number=champion.points}}</h1>
+      </div>
+      <div class="champion-rank-column">
+        <div class="rank-row">
+          Rank : 
+          <span class="rank-special-text">
+            {{format-number number=champion.champion_rank short=true}} / 
+            {{format-number number=champion.max_champion_rank short=true}}
+          </span>
+        </div>
+        <div class="rank-row">
+          Top {{champion-name championId=champion.champion_id}} : 
+          <span class="score-special-text">
+            {{format-number number=champion.max_champion_points}}
+          </span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; margin-left: 10px; margin-right: 10px; flex: 2 2; align-items: center;">
+        <div class="rank-row">
+          Overall Rank :
+          <span class="rank-special-text">
+            {{format-number number=champion.overall_rank short=true}} / 
+            {{format-number number=champion.max_overall_rank short=true}}
+          </span>
+        </div>
+        <div class="rank-row">
+          Top Overall : 
+          <span class="score-special-text">
+            {{format-number number=champion.max_overall_points}}
+          </span>
+        </div>
+      </div>
     </div>
-    <div class="champion-rank-column">
-      <div class="rank-row">
-        Rank : 
-        <span class="rank-special-text">
-          {{format-number number=champion.champion_rank short=true}} / 
-          {{format-number number=champion.max_champion_rank short=true}}
-        </span>
-      </div>
-      <div class="rank-row">
-        Top {{champion-name championId=champion.champion_id}} : 
-        <span class="score-special-text">
-          {{format-number number=champion.max_champion_points}}
-        </span>
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: column; margin-left: 10px; margin-right: 10px; flex: 2 2; align-items: center;">
-      <div class="rank-row">
-        Overall Rank :
-        <span class="rank-special-text">
-          {{format-number number=champion.overall_rank short=true}} / 
-          {{format-number number=champion.max_overall_rank short=true}}
-        </span>
-      </div>
-      <div class="rank-row">
-        Top Overall : 
-        <span class="score-special-text">
-          {{format-number number=champion.max_overall_points}}
-        </span>
-      </div>
-    </div>
-  </div>
-  {{/each}}
-
-
+    {{/each}}
+  {{/if}}
 </div>
