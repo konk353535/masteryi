@@ -7,3 +7,15 @@ frontend/tmp
 frontend/dist
 backend/frontend/node_modules
 backend/frontend/bower_components
+backend/frontend/tmp/
+backend/frontend/dist/
+backend/frontend/dist
+backend/frontend/dist/assets
+frontend.js
+frontend.map
+tests.js
+tests.map
+vendor.js
+index.html
+frontend.css
+frontend.css.map

@@ -11,15 +11,31 @@ body {
   height: 100%;
 }
 
+a {
+  color: #e9e9e9;
+}
+
+a:link, a:visited, a:hover, a:active {
+  color: #C9554F;
+}
+
 .navbar {
   border-radius: 0px;
   margin-bottom: 0px;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  color: #333;
+  background-color: transparent;
 }
 
 .content-container {
   background-color: #3D5587;
   box-shadow: 0px 0px 3px rgba(15, 15, 15, 0.5);
   padding: 10px;
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
 }
 
 h1, h2, h3, h4, h5, h6 {

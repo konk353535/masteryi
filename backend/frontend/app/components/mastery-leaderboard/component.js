@@ -3,17 +3,33 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
 
+  champion_id: null,
+
   limit: null,
 
   initLeaderboard: Ember.on('init', function () {
     let url = '/api/summary';
+
+    if (this.get('champion_id')) {
+      url += `/${this.get('champion_id')}`;
+    }
 
     if (this.get('limit')) {
       url += `?limit=${this.get('limit')}`;
     }
 
     Ember.$.ajax({ url }).then((response) => {
-      this.set('champions', response.rows);
+      // Sort by points
+      var rankings = response.rows;
+      rankings.sort((a,b) => b.points - a.points);
+      var rank = 1;
+      rankings = rankings.map((ranking) => {
+        ranking.rank = rank;
+        rank++;
+        return ranking;
+      })
+      // Iterate over and apply rank to json
+      this.set('champions', rankings);
     });
   }),
 

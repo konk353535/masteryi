@@ -30,6 +30,23 @@ module.exports = function (app) {
     });
   });
 
+  app.get('/api/summary/:champion', (req, res) => {
+    var champion = req.params.champion;
+    var queryText = `SELECT rankings.*, users.* FROM
+      (SELECT points, user_id, champion_id, rank() over (order by points desc) as rank 
+      FROM mastery WHERE champion_id=($1) LIMIT 100) as rankings,
+      users WHERE users.id = rankings.user_id;`;
+
+    client.query(queryText, [champion], (err, result) => {
+      if (err) {
+        logger.error(err);
+        return res.status(500).send('Uhh woops, that\'s a problem');
+      }
+
+      res.send(result);
+    });
+  });
+
   app.get('/api/search/:region/:name', (req, res) => {
     var region = req.params.region;
     var name = req.params.name;

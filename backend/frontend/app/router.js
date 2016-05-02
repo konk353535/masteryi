@@ -10,6 +10,7 @@ Router.map(function() {
   this.route('scans');
   this.route('home', { path: '/' });
   this.route('search', { path: '/search' });
+  this.route('championleaderboard');
 });
 
 export default Router;

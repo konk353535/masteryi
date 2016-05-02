@@ -1,0 +1,60 @@
+
+{{#if champion_id}}
+  <div style="display: flex; flex-direction: row; justify-content: start; align-items: center; margin: 10px;">
+    {{champion-image championId=champion_id size='medium'}}
+    <div style="margin-left: 10px; font-size: 24px">{{champion-name championId=champion_id}} Rankings</div>
+  </div>
+{{else}}
+  <div style="font-size: 24px; margin: 10px;">Global Rankings</div>
+{{/if}}
+
+<table class="table table-striped">
+  <thead>
+    <tr class="table-header">
+      <th {{action 'orderBy' 'rank'}}>
+        Rank
+        {{order-display target='championName' current=sortedByProperty type=sortedBy}}
+      </th>
+      {{#unless champion_id}}
+        <th {{action 'orderBy' 'championName'}}>
+          Champion
+          {{order-display target='championName' current=sortedByProperty type=sortedBy}}
+        </th>
+      {{/unless}}
+      <th {{action 'orderBy' 'points'}}>
+        Mastery Points
+        {{order-display target='points' current=sortedByProperty type=sortedBy}}
+      </th>
+      <th {{action 'orderBy' 'name'}}>
+        Name
+        {{order-display target='name' current=sortedByProperty type=sortedBy}}
+      </th>
+      <th {{action 'orderBy' 'region'}}>
+        Region
+        {{order-display target='region' current=sortedByProperty type=sortedBy}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each championsSorted as |champion|}}
+    <tr>
+      <td>{{champion.rank}}</td>
+      {{#unless champion_id}}
+        <td>
+          {{#link-to "championleaderboard" (query-params champion_id=champion.champion_id)}}
+            {{champion-image championId=champion.champion_id size='small'}}
+            {{champion.championName}}
+          {{/link-to}}
+        </td>
+      {{/unless}}
+      <td>{{format-number number=champion.points}}</td>
+      <td>
+        <a href='http://{{champion.region}}.op.gg/summoner/userName={{champion.name}}'>
+          {{champion.name}}
+        </a>
+      </td>
+      <td>{{champion.region}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
