@@ -31,7 +31,9 @@ const bulkCheckUsers = function (startID, region, next) {
 
   const fetchUsersUrl = `https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/${userIDs}?api_key=${config.key}`;
 
-  request({ url: fetchUsersUrl, retryDelay: 10000, timeout: 2500 }, (err, response, body) => {
+  // Randomize timeout to reduce number of parrallel requests;
+  const timeout = parseInt(Math.random()*1000) + 1000;
+  request({ url: fetchUsersUrl, retryDelay: 10000, timeout }, (err, response, body) => {
     if (response && response.statusCode === 404) return next();
     if (response && response.statusCode === 429) return setTimeout(() => bulkCheckUsers(startID, region, next), 10000);
 
@@ -62,7 +64,9 @@ const bulkScanUsers = function (users, region, callback) {
   const scanUser = (user, next) => {
     const fetchMasteryUrl = `https://${region}.api.pvp.net/championmastery/location/${platformID}/player/${user.id}/champions?api_key=${config.key}`;
 
-    request({ url: fetchMasteryUrl, retryDelay: 10000, timeout: 2500 }, (err, response, body) => {
+    // Randomize timeout to reduce number of parrallel requests;
+    const timeout = parseInt(Math.random()*1000) + 1000;
+    request({ url: fetchMasteryUrl, retryDelay: 10000, timeout }, (err, response, body) => {
       if (response && response.statusCode === 404) return next();
       if (response && response.statusCode === 429) return setTimeout(() => scanUser(user, next), 10000);
 
