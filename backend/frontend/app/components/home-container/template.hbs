@@ -24,9 +24,9 @@
         <li {{action 'setRegion' 'EUNE'}}><a href="#">EUNE</a></li>
       </ul>
       <button type="button" class="btn btn-default">
-        <a href="/search?name={{name}}&region={{region}}">
+        {{#link-to 'search' (query-params name=name region=region)}}
           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        </a>
+        {{/link-to}}
       </button>
     </div>
   </div><!-- /input-group -->
