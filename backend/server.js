@@ -7,7 +7,7 @@ var morgan = require('morgan')
 
 app.use(morgan('combined'));
 // To serve static content, such as compiled ember app
-app.use(express.static(__dirname + '/frontend/dist'));
+app.use(express.static(__dirname + '/dist'));
 
 require('./routes/scans')(app);
 require('./routes/stats')(app);
@@ -15,7 +15,7 @@ require('./routes/stats')(app);
 // Point all non defined routes to our ember app
 if (config.staticFiles) {
   app.get('*', function(req, res) {
-    res.sendFile('/frontend/dist/index.html', { root: __dirname });
+    res.sendFile('/dist/index.html', { root: __dirname });
   });
 }
 
