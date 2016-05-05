@@ -23,11 +23,9 @@
         <li {{action 'setRegion' 'EUW'}}><a href="#">EUW</a></li>
         <li {{action 'setRegion' 'EUNE'}}><a href="#">EUNE</a></li>
       </ul>
-      <button type="button" class="btn btn-default">
-        {{#link-to 'search' (query-params name=name region=region)}}
-          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        {{/link-to}}
-      </button>
+      {{#link-to 'search' (query-params name=name region=region) tagName='button' classNames='btn btn-default'}}
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      {{/link-to}}
     </div>
   </div><!-- /input-group -->
 </div><!-- /.col-lg-6 -->
