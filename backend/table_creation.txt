@@ -33,3 +33,8 @@ CREATE INDEX region_idx ON users (region);
 CREATE INDEX summoner_id_idx ON users (summoner_id);
 CREATE INDEX name_idx ON users (name);
 CREATE INDEX summoner_id_region_idx ON users (summoner_id, region);
+
+INSERT into SCANS VALUES (0, 8000000, 0, 'oce', 1);
+INSERT into SCANS VALUES (0, 100000000, 0, 'euw', 1);
+INSERT into SCANS VALUES (0, 100000000, 0, 'eune', 1);
+INSERT into SCANS VALUES (0, 100000000, 0, 'na', 1);
