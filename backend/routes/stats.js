@@ -61,7 +61,11 @@ module.exports = function (app) {
         }
 
         var userObj = JSON.parse(body)[name];
-        var userId = userObj.id;
+        if (userObj) {
+          var userId = userObj.id;          
+        } else {
+          return callback(null, []);
+        }
 
         return callback(null, userId);
       });
@@ -89,7 +93,7 @@ module.exports = function (app) {
       findUser,
       rankUser
     ], (err, rankings) => {
-      if (rankings.length === 0) return res.status(404).send();
+      if (rankings && rankings.length === 0) return res.status(404).send();
       res.send(rankings);
     });
 
