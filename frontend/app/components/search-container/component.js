@@ -28,12 +28,15 @@ export default Ember.Component.extend({
     })
     .fail((err) => {
       this.set('loading', false);
+      this.set('error', true);
+
       if (err.status === 404) {
-        this.set('error', true);
         this.set('errorText', `Sorry we can\'t find you. <br />
           This is due to you having no champions with level 5 mastery <br />
           OR <br />
           We are still scanning, and you have yet to be scanned`);
+      } else {
+        this.set('errorText', `Everything is on fire`);
       }
     });
 
