@@ -13,6 +13,8 @@ CREATE TABLE mastery
   points integer,
   champion_id integer,
   user_id numeric,
+  champion_rank numeric,
+  global_rank numeric,
   PRIMARY KEY(champion_id, user_id)
 );
 
@@ -25,9 +27,20 @@ CREATE TABLE users
   PRIMARY KEY(region, summoner_id)
 );
 
+CREATE TABLE mastery_cache
+(
+  champion_id integer,
+  champion_total numeric DEFAULT '0',
+  global_total numeric DEFAULT '0',
+  PRIMARY KEY (champion_id)
+);
+
 CREATE INDEX points_idx ON mastery (points);
 CREATE INDEX champion_id_idx ON mastery (champion_id);
 CREATE INDEX user_id_idx ON mastery (user_id);
+CREATE INDEX champion_rank_idx ON mastery (champion_rank);
+CREATE INDEX global_rank_idx ON mastery (global_rank);
+CREATE INDEX champion_id_champion_rank_idx ON mastery (champion_id, champion_rank);
 
 CREATE INDEX region_idx ON users (region);
 CREATE INDEX summoner_id_idx ON users (summoner_id);

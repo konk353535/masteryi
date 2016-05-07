@@ -3,7 +3,10 @@ var config = require('./config')(env);
 
 var express = require('express');
 var app = express();
-var morgan = require('morgan')
+var morgan = require('morgan');
+
+var ranker = require('./ranker');
+var CronJob = require('cron').CronJob;
 
 app.use(morgan('combined'));
 // To serve static content, such as compiled ember app
@@ -22,3 +25,11 @@ if (config.staticFiles) {
 app.listen(3025, function () {
   console.log('We have a go on 3025!');
 });
+
+new CronJob('0 0 0 * * *', function () {
+  ranker.start();
+}, null, true);
+
+new CronJob('0 * * * * *', function () {
+  ranker.cacheMax();
+}, null, true);

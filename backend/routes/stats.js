@@ -17,9 +17,10 @@ module.exports = function (app) {
       limit = 'ALL';
     }
 
-    var queryText = 'SELECT * FROM mastery, users WHERE mastery.points IN ' +
-      '(select max(points) as points FROM mastery GROUP BY champion_id ORDER BY points desc LIMIT ($1))' +
-      'AND users.id = mastery.user_id';
+    var queryText = 'SELECT * FROM users, ' +
+      '(SELECT * FROM mastery WHERE champion_rank = 1 ORDER BY global_rank ASC LIMIT ($1)) as ranks ' +
+      'WHERE users.id = ranks.user_id';
+
     client.query(queryText, [req.query.limit], (err, result) => {
       if (err) {
         logger.error(err);
@@ -32,10 +33,9 @@ module.exports = function (app) {
 
   app.get('/api/summary/:champion', (req, res) => {
     var champion = req.params.champion;
-    var queryText = `SELECT rankings.*, users.* FROM
-      (SELECT points, user_id, champion_id, rank() over (order by points desc) as rank 
-      FROM mastery WHERE champion_id=($1) LIMIT 100) as rankings,
-      users WHERE users.id = rankings.user_id;`;
+    var queryText = 'SELECT * FROM users, ' +
+      '(SELECT * FROM mastery WHERE champion_id = ($1) AND champion_rank <= 100) as ranks ' +
+      'WHERE users.id = ranks.user_id';
 
     client.query(queryText, [champion], (err, result) => {
       if (err) {
@@ -67,13 +67,14 @@ module.exports = function (app) {
       });
     };
 
-    // Get global rankings
-    var rankUserGlobal = (userId, callback) => {
-      var queryText = `SELECT ranked.*, total.* FROM (
-        SELECT user_id, champion_id, rank() over (order by points desc) as overall_rank
-        FROM mastery) as ranked,
-        (SELECT max(points) as max_overall_points, count(*) as max_overall_rank from mastery) as total
-        WHERE user_id = (SELECT id FROM users WHERE users.summoner_id = ($1) AND users.region = ($2))`;
+    // Get users champion rankings
+    var rankUser = (userId, callback) => {
+      var queryText = 'SELECT * FROM users, mastery_cache, ' +
+        '(SELECT * FROM mastery WHERE user_id = ' +
+        ' (SELECT id FROM users WHERE users.summoner_id = ($1) AND users.region = ($2))' +
+        ') as ranks WHERE users.id = ranks.user_id AND ranks.champion_id = mastery_cache.champion_id ' +
+        'ORDER BY ranks.points DESC';
+
       client.query(queryText, [userId, region], (err, result) => {
         if (err) {
           logger.error(err);
@@ -84,47 +85,13 @@ module.exports = function (app) {
       });
     };
 
-    var rankChampions = (ranks, callback) => {
-      if (ranks.length === 0) return callback(null, 'No rankings found');
-
-      var player_rankings = [];
-
-      // For each champion found, get champion specific rankings
-      async.eachLimit(ranks, 1, (rank, next) => {
-        var queryText = `SELECT ranked.*, total.* FROM (
-          SELECT user_id, points, champion_id, rank() over (order by points desc) as champion_rank
-          FROM mastery
-          WHERE champion_id = ($1)) as ranked,
-          (SELECT max(points) as max_champion_points, count(*) as max_champion_rank from mastery WHERE champion_id = ($1)) as total
-          WHERE user_id = ($2)`;
-        client.query(queryText, [rank.champion_id, rank.user_id], (err, res) => {
-          if (err) {
-            logger.error(err);
-            return next(err);
-          }
-
-          // Merge champion specific ranks with global rankings
-          var fullRanking = _.merge(res.rows[0], rank);
-          player_rankings.push(fullRanking);
-          return next(null);
-        })
-      }, (err) => {
-        if (err) {
-          logger.error(err);
-          return callback(err);
-        }
-
-        callback(null, player_rankings);
-      });
-    };
-
     async.waterfall([
       findUser,
-      rankUserGlobal,
-      rankChampions
+      rankUser
     ], (err, rankings) => {
+      if (rankings.length === 0) return res.status(404).send();
       res.send(rankings);
-    })
+    });
 
   });
 };
