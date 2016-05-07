@@ -18,6 +18,32 @@
         <li>{{#link-to 'leaderboard'}}Leaderboard{{/link-to}}</li>
         <li>{{#link-to 'scans'}}Scans{{/link-to}}</li>
       </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+            {{input value=name placeholder="Summoner Name" class="form-control"}}
+            <div class="dropdown" style="display: inline-block">
+              <button
+                type="button" 
+                class="form-control"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+                {{region}} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li {{action 'setRegion' 'NA'}}><a href="#">NA</a></li>
+                <li {{action 'setRegion' 'OCE'}}><a href="#">OCE</a></li>
+                <li {{action 'setRegion' 'EUW'}}><a href="#">EUW</a></li>
+                <li {{action 'setRegion' 'EUNE'}}><a href="#">EUNE</a></li>
+              </ul>
+            </div>
+          </div>
+          {{#link-to 'search' (query-params name=name region=region) tagName='button' classNames='btn btn-default'}}
+            Search
+          {{/link-to}}
+        </form>
+      </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>

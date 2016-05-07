@@ -1,10 +1,57 @@
 <div class="container">
+
+  <h2 style="margin-bottom: 20px;">
+    <span style="text-transform: capitalize">{{name}}</span>
+    - {{region-name region=region}}
+  </h2>
+
   {{#if loading}}
     <div class="loader-container" style="text-align: center">
       <div class="loader"></div>
       {{loading-text}}
     </div>
   {{else}}
+    {{#if error}}
+      <div style="display: flex; flex: 1 1 auto; justify-content: center; align-items: center; height: 400px;">
+        <h2 style="color: #C9554F; text-align: center;">{{{errorText}}}</h2>
+      </div>
+    {{else}}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Champion</th>
+            <th>Score</th>
+            <th>Champion Rank</th>
+            <th>Overall Rank</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each championData as |champion|}}
+          <tr>
+            <td>
+              {{champion-image championId=champion.champion_id size='small'}}
+              {{#link-to "championleaderboard" (query-params champion_id=champion.champion_id)}}
+                {{champion-name championId=champion.champion_id}}
+              {{/link-to}}
+            </td>
+            <td>
+              {{format-number number=champion.points}}
+            </td>
+            <td>
+              {{format-number number=champion.champion_rank short=true}} / 
+              {{format-number number=champion.champion_total short=true}}
+            </td>
+            <td>
+              {{format-number number=champion.global_rank short=true}} /
+              {{format-number number=champion.global_total short=true}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+  {{/if}}
+    <!--
     {{#each championData as |champion|}}
     <div class="champion-row">
       <div class="icon-column">
@@ -18,35 +65,18 @@
       </div>
       <div class="champion-rank-column">
         <div class="rank-row">
-          Rank : 
+          {{champion-name championId=champion.champion_id}} Rank : 
           <span class="rank-special-text">
-            {{format-number number=champion.champion_rank short=true}} / 
-            {{format-number number=champion.max_champion_rank short=true}}
+            {{format-number number=champion.champion_rank short=true}}
           </span>
         </div>
         <div class="rank-row">
-          Top {{champion-name championId=champion.champion_id}} : 
+          Overall Rank : 
           <span class="score-special-text">
-            {{format-number number=champion.max_champion_points}}
-          </span>
-        </div>
-      </div>
-      <div style="display: flex; flex-direction: column; margin-left: 10px; margin-right: 10px; flex: 2 2; align-items: center;">
-        <div class="rank-row">
-          Overall Rank :
-          <span class="rank-special-text">
-            {{format-number number=champion.overall_rank short=true}} / 
-            {{format-number number=champion.max_overall_rank short=true}}
-          </span>
-        </div>
-        <div class="rank-row">
-          Top Overall : 
-          <span class="score-special-text">
-            {{format-number number=champion.max_overall_points}}
+            {{format-number number=champion.global_rank}}
           </span>
         </div>
       </div>
     </div>
-    {{/each}}
-  {{/if}}
+    {{/each}}-->
 </div>

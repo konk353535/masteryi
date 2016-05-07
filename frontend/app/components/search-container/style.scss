@@ -66,3 +66,15 @@ $tertiary-color: #C9A04F;
 .score-special-text {
   color: #C9554F;
 }
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #2F4676;
+}
+
+.table > tbody > tr > td, .table > thead > tr > th {
+  border: none;
+}
+
+.table > thead > tr > th {
+  cursor: pointer;
+}
