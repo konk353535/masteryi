@@ -34,30 +34,65 @@ const startRanking = function () {
 }
 
 const cacheMax = function () {
-  // Cache the max ranking for each champion + overall
-  client.query('SELECT max(champion_rank) as champion_total, champion_id FROM mastery GROUP BY champion_id', (err, res) => {
-    if (err || !res.rows) return logger.error(err);
-    const champion_rows = res.rows;
 
-    client.query('SELECT max(global_rank) as global_total FROM mastery', (err, res) => {
-      if (err || !res.rows || res.rows.length === 0) return logger.error(err);
-
-      const global_total = res.rows[0].global_total;
-
-      async.eachLimit(champion_rows, 5, (item, next) => {
-        const queryText = 'INSERT INTO mastery_cache (champion_id, champion_total, global_total) ' +
-          'VALUES (($1), ($2), ($3)) ON CONFLICT(champion_id) ' +
-          'DO UPDATE SET champion_total = ($2), global_total = ($3)';
-
-        client.query(queryText, [item.champion_id, item.champion_total, global_total], (err, res) => {
-          next();
-        });
-      }, (err) => {
-        if (err) return logger.error(err);
-        console.log('Finished updating totals');
-      });
+  const fetchChampTotals = (callback) => {
+    // Cache the max ranking for each champion + overall
+    client.query('SELECT max(champion_rank) as champion_total, champion_id FROM mastery GROUP BY champion_id', (err, res) => {
+      if (err || !res.rows) return callback(err);
+      callback(null, res.rows);
     });
+  };
+
+  const fetchGlobalTotal = (champion_totals, callback) => {
+    client.query('SELECT max(global_rank) as global_total FROM mastery', (err, res) => {
+      if (err || !res.rows || res.rows.length === 0) return callback(err);
+      const global_total = res.rows[0].global_total;
+      callback(null, champion_totals, global_total)
+    });
+  };
+
+  const fetchExisting = (champion_totals, global_total, callback) => {
+    client.query('SELECT * FROM mastery_cache', (err, res) => {
+      if (err) return callback(err);
+      callback(null, champion_totals, global_total, res.rows);
+    });
+  };
+
+  const upsertCache = (champion_totals, global_total, existing, callback) => {
+    var existingMap = {};
+    if (existing) {
+      existing.forEach((row) => {
+        existingMap[row.champion_id] = true;
+      });
+    }
+
+    var queryText;
+
+    async.eachLimit(champion_totals, 5, (item, next) => {
+      if (existingMap[item.champion_id]) {
+        // Update
+        queryText = 'UPDATE mastery_cache SET champion_total=($1), global_total=($2) WHERE champion_id=($3)';
+        client.query(queryText, [item.champion_total, global_total, item.champion_id], next);
+      } else {
+        // Insert
+        queryText = 'INSERT INTO mastery_cache (champion_id, champion_total, global_total) VALUES (($1), ($2), ($3))';
+        client.query(queryText, [item.champion_id, item.champion_total, global_total], next);
+      }
+    }, callback);
+  }
+
+  async.waterfall([
+
+    fetchChampTotals,
+    fetchGlobalTotal,
+    fetchExisting,
+    upsertCache
+
+  ], (err) => {
+    if (err) logger.error(err);
+    logger.info('Updated champion mastery cache');
   });
+
 }
 
 module.exports = {

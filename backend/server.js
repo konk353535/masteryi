@@ -30,6 +30,7 @@ new CronJob('0 0 0 * * *', function () {
   ranker.start();
 }, null, true);
 
+ranker.cacheMax();
 new CronJob('0 * * * * *', function () {
   ranker.cacheMax();
 }, null, true);
