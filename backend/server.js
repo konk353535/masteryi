@@ -22,8 +22,8 @@ if (config.staticFiles) {
   });
 }
 
-app.listen(3025, function () {
-  console.log('We have a go on 3025!');
+app.listen(80, function () {
+  console.log('We have a go on 80!');
 });
 
 new CronJob('0 0 0 * * *', function () {
