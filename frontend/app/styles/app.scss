@@ -46,6 +46,21 @@ h1, h2, h3, h4, h5, h6 {
 body > .ember-view {
   display: flex;
   flex-flow: column;
+  min-height: 100%;
+}
+
+footer {
+  display: flex;
+  flex: 0 1 auto;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.legal-text {
+  padding: 10px;
+  font-size: 10px;
+  color: #3E9C4A;
 }
 
 // CSS loading indicator
