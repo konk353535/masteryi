@@ -31,6 +31,6 @@ new CronJob('0 0 0 */4 * *', function () {
 }, null, true);
 
 ranker.cacheMax();
-new CronJob('0 * * * * *', function () {
+new CronJob('0 */5 * * * *', function () {
   ranker.cacheMax();
 }, null, true);
