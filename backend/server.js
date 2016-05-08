@@ -26,7 +26,7 @@ app.listen(80, function () {
   console.log('We have a go on 80!');
 });
 
-new CronJob('0 0 0 * * *', function () {
+new CronJob('0 0 0 */4 * *', function () {
   ranker.start();
 }, null, true);
 
