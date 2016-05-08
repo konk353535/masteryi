@@ -2,7 +2,7 @@
 
 [Demo Website](http://www.masteryi.net)
 
-[Presentation]()
+[Presentation](https://github.com/konk353535/masteryi/blob/master/presentation.md#presentation)
 
 Masteryi is a submition into the 2016 Riot Games API challenge. The aim of the project was to scan all players with champion mastery level 5 in North America, Europe and Oceania. With the collected data users could see a leaderboard of the players with the highest champion mastery, as well as how they compare to players across multiple regions.
 
