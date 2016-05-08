@@ -3,13 +3,13 @@ module.exports = function (env) {
     return {
       workerConcurrency: 1,
       key: '<riot-api-key>',
-      database: '<connect-string-postgres'
+      database: 'postgres://username:password@localhost/database'
     };
   } else {
     return {
       workerConcurrency: 1,
       key: '<riot-api-key>',
-      database: '<connect-string-postgres'
+      database: 'postgres://username:password@localhost/database'
     };
   }
 }
