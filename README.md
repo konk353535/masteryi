@@ -19,7 +19,8 @@ Backend
   - Ubuntu: `https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04`
 - Create required table as specified in `table_creation.txt`
 - Install npm modules `npm install`
-- Start server using `node server dev` or `node server prod` to launch with prod configuration (as defined in config.js)
+- To start server on dev, modify express port on server.js from 80 to 3025 and then run `node server dev`
+- To start server on prod run `node server prod` to launch with prod configuration (as defined in config.js)
 - Start scan using `node scan dev` or `node scan prod`
   
 Frontend
