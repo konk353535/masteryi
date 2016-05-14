@@ -6,6 +6,7 @@ var app = express();
 var morgan = require('morgan');
 
 var ranker = require('./ranker');
+var scanRangeFinder = require('./scanRangeFinder');
 var CronJob = require('cron').CronJob;
 
 app.use(morgan('combined'));
@@ -22,15 +23,26 @@ if (config.staticFiles) {
   });
 }
 
-app.listen(80, function () {
-  console.log('We have a go on 80!');
-});
+if (env === 'prod'){
+  app.listen(80, function () {
+    console.log('We have a go on 80!');
+  });
+} else {
+  app.listen(3025, function () {
+    console.log('We have a go on 3025!');
+  });
+}
 
-new CronJob('0 0 0 */4 * *', function () {
+new CronJob('0 0 0 * * *', function () {
   ranker.start();
 }, null, true);
 
-ranker.cacheMax();
-new CronJob('0 */5 * * * *', function () {
+new CronJob('0 0 * * * *', function () {
   ranker.cacheMax();
+}, null, true);
+
+scanRangeFinder.start();
+
+new CronJob('0 0 0 0 * *', function () {
+  scanRangeFinder.start();
 }, null, true);
