@@ -56,7 +56,7 @@ const startFinder = () => {
       const scans = results.rows;
       async.eachLimit(scans, 1, (item, next) => {
         search(item.region, 0, BILLION, BILLION, (err, res) => {
-          if (!err && res) client.query('UPDATE scans SET end_id = ($1)', [res]);
+          if (!err && res) client.query('UPDATE scans SET end_id = ($1) WHERE region = ($2)', [res, item.region]);
           next();
         });
       });
