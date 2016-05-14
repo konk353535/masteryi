@@ -19,7 +19,12 @@ const search = (region, minID, maxID, searchWidth, callback) => {
   var maxFoundID = -Infinity;
 
   async.eachLimit(userIDs, 5, (userID, next) => {
-    const userIDs = _.range(userID - 20, userID + 20);
+    var userIDs = _.range(userID - 200, userID + 200, 10);
+
+    if (searchWidth === 1) {
+      userIDs = _.range(userID - 20, userID + 20);
+    }
+    
     const fetchUserUrl = `https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/${userIDs}?api_key=${config.key}`;
     request({ url: fetchUserUrl }, (err, response, body) => {
       if (body) {
@@ -42,10 +47,12 @@ const search = (region, minID, maxID, searchWidth, callback) => {
     } else {
       if (maxFoundID === -Infinity) maxFoundID = 0;
       logger.info(`Scanner found ${maxFoundID} for search width ${searchWidth}`);
-      search(region, maxFoundID, (maxFoundID + (searchWidth * 2)), searchWidth / 10, callback);
+      search(region, maxFoundID, maxFoundID + searchWidth, searchWidth / 10, callback);
     }
   });
 }
+
+
 
 const startFinder = () => {
   // Get all scans
@@ -55,7 +62,7 @@ const startFinder = () => {
     if (results && results.rows && results.rows.length > 0) {
       const scans = results.rows;
       async.eachLimit(scans, 1, (item, next) => {
-        search(item.region, 0, BILLION, BILLION, (err, res) => {
+        search(item.region, 0, BILLION, 100 * MILLION, (err, res) => {
           if (!err && res) client.query('UPDATE scans SET end_id = ($1) WHERE region = ($2)', [res, item.region]);
           next();
         });
