@@ -1,4 +1,18 @@
 export default {
+   163: {
+      "title": "the Stoneweaver",
+      "name": "Taliyah",
+      "image": {
+         "w": 48,
+         "full": "Taliyah.png",
+         "sprite": "champion3.png",
+         "group": "champion",
+         "h": 48,
+         "y": 48,
+         "x": 48
+      },
+      "key": "Taliyah"
+   },
    266: {
       "title": "the Darkin Blade",
       "name": "Aatrox",
