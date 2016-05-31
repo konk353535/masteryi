@@ -7,6 +7,7 @@ const pg = require('pg');
 const _ = require('lodash');
 pg.defaults.parseInt8 = true;
 const client = new pg.Client(config.database);
+const worker = require('./../worker');
 client.connect();
 
 module.exports = function (app) {
@@ -71,6 +72,14 @@ module.exports = function (app) {
       });
     };
 
+    // Update the users data
+    var updateUser = (userId, callback) => {
+      worker.bulkCheckUsers(userId, 1, region, (err, res) => {
+        if (err) logger.error(err);
+        callback(null, userId);
+      });
+    };
+
     // Get users champion rankings
     var rankUser = (userId, callback) => {
       var queryText = 'SELECT * FROM users, mastery_cache, ' +
@@ -91,6 +100,7 @@ module.exports = function (app) {
 
     async.waterfall([
       findUser,
+      updateUser,
       rankUser
     ], (err, rankings) => {
       if (rankings && rankings.length === 0) return res.status(404).send();

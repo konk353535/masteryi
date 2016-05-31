@@ -9,6 +9,7 @@ Router.map(function() {
   this.route('leaderboard');
   this.route('scans');
   this.route('home', { path: '/' });
+  this.route('faq');
   this.route('search', { path: '/search' });
   this.route('championleaderboard');
 });

@@ -18,7 +18,7 @@ const startWorker = function (startID, endID, region, runNumber) {
 
   async.eachLimit(scanArr, concurrency, (item, next) => {
     updateWorkerStatus(item, region, runNumber);
-    bulkCheckUsers(item, region, next);
+    bulkCheckUsers(item, 39, region, next);
   }, (err, res) => {
     if (err) logger.info(`Error: ${err}`);
     logger.info(`Success: ${res}`);
@@ -26,8 +26,8 @@ const startWorker = function (startID, endID, region, runNumber) {
 };
 
 // Check if user list exists
-const bulkCheckUsers = function (startID, region, next) {
-  const userIDs = _.range(startID, startID + 39).join(',');
+const bulkCheckUsers = function (startID, batchSize, region, next) {
+  const userIDs = _.range(startID, startID + batchSize).join(',');
 
   const fetchUsersUrl = `https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/${userIDs}?api_key=${config.key}`;
 
@@ -35,7 +35,7 @@ const bulkCheckUsers = function (startID, region, next) {
   const timeout = parseInt(Math.random()*1000) + 1000;
   request({ url: fetchUsersUrl, retryDelay: 10000, timeout }, (err, response, body) => {
     if (response && response.statusCode === 404) return next();
-    if (response && response.statusCode === 429) return setTimeout(() => bulkCheckUsers(startID, region, next), 10000);
+    if (response && response.statusCode === 429) return setTimeout(() => bulkCheckUsers(startID, batchSize, region, next), 10000);
 
     if (err || !response || response.statusCode !== 200) {
       logger.error(`Unexpected error: ${err}`);
@@ -130,7 +130,6 @@ const uploadBulkUsers = function (usersDetailed, region, outerCallback) {
 
       // Insert / Update mastery
       function (result, userID, callback) {
-
         const existingChampions = util.toSingleObject(result.rows, 'champion_id');
         champions = util.toSingleObject(user.champions, 'championId')
         
@@ -174,5 +173,6 @@ const updateWorkerStatus = function (currentID, region, runNumber) {
 }
 
 module.exports = {
-  start: startWorker
+  start: startWorker,
+  bulkCheckUsers
 }

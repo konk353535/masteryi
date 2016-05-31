@@ -33,16 +33,18 @@ if (env === 'prod'){
   });
 }
 
-new CronJob('0 0 0 * * *', function () {
-  ranker.start();
+new CronJob('0 0 0 */7 * *', function () {
+  ranker.startGlobal();
 }, null, true);
 
-new CronJob('0 0 * * * *', function () {
+new CronJob('0 0 0 * * *', function () {
+  ranker.startChampion();
+}, null, true);
+
+new CronJob('0 0 1 * * *', function () {
   ranker.cacheMax();
 }, null, true);
 
-scanRangeFinder.start();
-
-new CronJob('0 0 0 0 * *', function () {
+new CronJob('0 0 2 * * *', function () {
   scanRangeFinder.start();
 }, null, true);

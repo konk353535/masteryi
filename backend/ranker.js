@@ -8,7 +8,7 @@ const pg = require('pg');
 const client = new pg.Client(config.database);
 client.connect();
 
-const startRanking = function () {
+const startGlobalRanking = function () {
   // Set global rankings for all players
   client.query(`UPDATE mastery SET global_rank=rank FROM 
     (SELECT row_number() OVER(ORDER BY points DESC) AS rank, * FROM mastery ORDER BY points DESC) AS t1 
@@ -18,17 +18,20 @@ const startRanking = function () {
       } else {
         logger.info(res);
       }
-      // Set champion rankings for all players
-      client.query(`UPDATE mastery SET champion_rank=rank FROM 
-        (SELECT *, RANK() OVER(PARTITION BY champion_id ORDER BY points DESC) AS rank FROM mastery) AS t1 
-        WHERE mastery.user_id=t1.user_id AND mastery.champion_id=t1.champion_id`, (err, res) => {
-          if (err) {
-            logger.error(err);
-          } else {
-            logger.info(res);
-          }
-        }
-      )
+    }
+  );
+}
+
+const startChampionRanking = function () {
+  // Set champion rankings for all players
+  client.query(`UPDATE mastery SET champion_rank=rank FROM 
+    (SELECT *, RANK() OVER(PARTITION BY champion_id ORDER BY points DESC) AS rank FROM mastery) AS t1 
+    WHERE mastery.user_id=t1.user_id AND mastery.champion_id=t1.champion_id`, (err, res) => {
+      if (err) {
+        logger.error(err);
+      } else {
+        logger.info(res);
+      }
     }
   );
 }
@@ -96,6 +99,7 @@ const cacheMax = function () {
 }
 
 module.exports = {
-  start: startRanking,
+  startChampion: startChampionRanking,
+  startGlobal: startGlobalRanking,
   cacheMax: cacheMax
 }

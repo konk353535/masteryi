@@ -42,6 +42,11 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 10px;
 }
 
+.faq-text {
+  font-size: 18px;
+  color: #bbb;
+}
+
 // Targets the application wrapper
 body > .ember-view {
   display: flex;

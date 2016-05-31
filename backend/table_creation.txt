@@ -12,7 +12,7 @@ CREATE TABLE mastery
 (
   points integer,
   champion_id integer,
-  user_id numeric,
+  user_id integer,
   champion_rank numeric,
   global_rank numeric,
   PRIMARY KEY(champion_id, user_id)
