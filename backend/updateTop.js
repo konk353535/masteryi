@@ -12,7 +12,7 @@ const queryText = 'SELECT user_id, summoner_id, region FROM mastery, users WHERE
 
 client.query(queryText, function(err, res){
   if (err) return console.log(err);
-  async.eachLimit(res.rows, 1, (item, next) => {
+  async.eachLimit(res.rows, 2, (item, next) => {
     worker.bulkCheckUsers(parseInt(item.summoner_id), 1, item.region, function (err, res) {
       if (err) logger.error(err);
       next(null);
