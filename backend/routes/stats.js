@@ -61,11 +61,13 @@ module.exports = function (app) {
           return callback(err);
         }
 
-        var userObj = JSON.parse(body)[name];
+        // Key is lowercase with all spaces removed
+        var nameKey = name.toLowerCase.replace(' ', '');
+        var userObj = JSON.parse(body)[nameKey];
         if (userObj) {
           var userId = userObj.id;          
         } else {
-          return callback(null, []);
+          return callback('Error no id was found');
         }
 
         return callback(null, userId);
