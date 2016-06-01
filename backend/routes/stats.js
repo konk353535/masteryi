@@ -62,7 +62,7 @@ module.exports = function (app) {
         }
 
         // Key is lowercase with all spaces removed
-        var nameKey = name.toLowerCase.replace(' ', '');
+        var nameKey = name.toLowerCase().replace(' ', '');
         var userObj = JSON.parse(body)[nameKey];
         if (userObj) {
           var userId = userObj.id;          
