@@ -78,7 +78,7 @@ const bulkScanUsers = function (users, region, callback) {
       // Array of users champion mastery
       var champions = JSON.parse(body)
       // Only want level 5's
-      champions = champions.filter((champion) => champion.championLevel === 5)
+      champions = champions.filter((champion) => champion.championLevel >= 5)
 
       if (champions.length === 0) return next();
 
