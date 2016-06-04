@@ -33,11 +33,11 @@ if (env === 'prod'){
   });
 }
 
-new CronJob('0 0 0 */7 * *', function () {
+new CronJob('0 0 0 */5 * *', function () {
   ranker.startGlobal();
 }, null, true);
 
-new CronJob('0 0 0 * * *', function () {
+new CronJob('0 0 0 */3 * *', function () {
   ranker.startChampion();
 }, null, true);
 

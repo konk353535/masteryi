@@ -12,16 +12,20 @@ const queryText = 'SELECT user_id, summoner_id, region FROM mastery, users WHERE
 
 client.query(queryText, function(err, res){
   if (err) return console.log(err);
-  async.eachLimit(res.rows, 2, (item, next) => {
+  async.eachLimit(res.rows, 10, (item, next) => {
     worker.bulkCheckUsers(parseInt(item.summoner_id), 1, item.region, function (err, res) {
       if (err) logger.error(err);
       next(null);
     });
   }, (err) => {
     if (err) return console.log(err);
-    console.log('Easy part is over, hard part begins');
     // Update champion specific rankings
-    ranker.startChampion();
+    client.query('UPDATE mastery SET champion_rank=rank' +
+      'FROM (SELECT *, RANK() OVER(PARTITION BY champion_id ORDER BY points DESC) AS rank FROM mastery) AS t1' +
+      'WHERE mastery.user_id=t1.user_id AND mastery.champion_id=t1.champion_id' +
+      'AND (t1.rank <= 200)', (err, res) => {
+        if (err) return console.error(err);
+      });
   });
 })
 
